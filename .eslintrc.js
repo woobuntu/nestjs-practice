@@ -4,7 +4,7 @@ module.exports = {
   parserOptions: {
     project: 'tsconfig.json',
     sourceType: 'module',
-    tsconfigRootDir: __dirname,
+    tsconfigRootDir: __dirname, // cannot read file tsconfig.json 에러에 대한 대처
   },
   plugins: ['@typescript-eslint/eslint-plugin'],
   extends: [
