@@ -1,8 +1,10 @@
+// 일관적인 코드를 작성할 수 있게끔 nest.js에서 제시하는 rule
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: 'tsconfig.json',
     sourceType: 'module',
+    tsconfigRootDir: __dirname,
   },
   plugins: ['@typescript-eslint/eslint-plugin'],
   extends: [
