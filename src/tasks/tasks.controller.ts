@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task } from './task.model';
+import { CreateTaskDto } from './dto/create-task.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -13,14 +14,8 @@ export class TasksController {
   }
 
   @Post('/') // @Post()
-  // addTask(@Body() body): Task {
-  // 이렇게 body 전체를 받아서 구조 분해해도 될 듯?
-  // 아 이러면 타입 지정이 어려운가
-  addTask(
-    @Body('title') title: string,
-    @Body('description') description: string,
-  ): Task {
-    return this.tasksService.addTask(title, description);
+  addTask(@Body() createTaskDto: CreateTaskDto): Task {
+    return this.tasksService.addTask(createTaskDto);
     // nestjs가 알아서 http response로 변환해서 반환
   }
 }
