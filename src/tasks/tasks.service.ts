@@ -38,4 +38,15 @@ export class TasksService {
 
     return `id ${taskId} task는 삭제되었습니다.`;
   }
+
+  updateTaskStatusById(taskId: string, newStatus: TaskStatus): Task {
+    const taskIdInDb = this.tasks.findIndex(({ id }) => id == taskId);
+
+    if (taskIdInDb == -1)
+      throw new Error(`id ${taskId} task는 존재하지 않습니다.`);
+
+    this.tasks[taskIdInDb].status = newStatus;
+
+    return this.tasks[taskIdInDb];
+  }
 }
