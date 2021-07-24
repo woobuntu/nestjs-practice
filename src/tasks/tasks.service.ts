@@ -29,4 +29,13 @@ export class TasksService {
 
     return task;
   }
+
+  deleteTaskById(taskId: string): string {
+    if (!this.tasks.find(({ id }) => id == taskId))
+      return `id ${taskId} task는 존재하지 않습니다.`;
+
+    this.tasks = this.tasks.filter(({ id }) => id !== taskId);
+
+    return `id ${taskId} task는 삭제되었습니다.`;
+  }
 }
