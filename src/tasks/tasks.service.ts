@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Task, TaskStatus } from './task.model';
 import { v4 as uuid } from 'uuid';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 @Injectable() // 싱글톤
 export class TasksService {
   private tasks: Task[] = [];
@@ -9,6 +10,24 @@ export class TasksService {
   // 타입스크립트에서 메소드를 정의할 때 명시적으로 접근자를 선언해주지 않으면 디폴트로 public이 된다.
   getAllTasks(): Task[] {
     return this.tasks;
+  }
+
+  getTasksWithFilters(filterDto: GetTasksFilterDto): Task[] {
+    const { status: filterStatus, search: filterSearch } = filterDto;
+
+    let response = this.tasks.slice();
+
+    if (filterStatus)
+      response = response.filter(({ status }) => status == filterStatus);
+
+    if (filterSearch)
+      response = response.filter(
+        ({ title, description }) =>
+          title.toLowerCase().includes(filterSearch) ||
+          description.toLowerCase().includes(filterSearch),
+      );
+
+    return response;
   }
 
   getTaskByID(taskId: string): Task {

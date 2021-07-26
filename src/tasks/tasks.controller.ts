@@ -6,11 +6,12 @@ import {
   Param,
   Patch,
   Post,
-  Put,
+  Query,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { Task, TaskStatus } from './task.model';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -18,8 +19,10 @@ export class TasksController {
   // 이렇게 접근자를 사용하여 클래스의 프로퍼티를 정의하는 것은 타입스크립트에서만 지원하는 기능이다.
 
   @Get()
-  getAllTasks(): Task[] {
-    return this.tasksService.getAllTasks();
+  getTasks(@Query() filterDto: GetTasksFilterDto): Task[] {
+    return Object.keys(filterDto).length
+      ? this.tasksService.getTasksWithFilters(filterDto)
+      : this.tasksService.getAllTasks();
   }
   @Get('/:taskId')
   getTaskByID(@Param('taskid') taskId: string): Task {
