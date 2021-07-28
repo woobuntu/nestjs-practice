@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Task, TaskStatus } from './task.model';
 import { v4 as uuid } from 'uuid';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -31,7 +31,12 @@ export class TasksService {
   }
 
   getTaskByID(taskId: string): Task {
-    return this.tasks.find(({ id }) => id == taskId);
+    const found = this.tasks.find(({ id }) => id == taskId);
+
+    if (!found) throw new NotFoundException();
+    // 인자값을 전달하여 errorMessage를 custom할 수도 있다
+
+    return found;
   }
 
   addTask(createTaskDto: CreateTaskDto): Task {
