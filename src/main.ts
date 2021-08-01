@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
@@ -10,6 +11,8 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter({ logger: true }),
   );
+  app.useGlobalPipes(new ValidationPipe());
+  // validation 관련 decorator를 만나면 validationPipe를 실행한다는 것
   await app.listen(3000, '0.0.0.0');
   // fastify는 default로 localhost 127.0.0.1을 리스닝하기 때문에
   // 위와 같이 커스텀하기 위해서는 두번째 인자로 '0.0.0.0'를 명시해주어야 한다.
