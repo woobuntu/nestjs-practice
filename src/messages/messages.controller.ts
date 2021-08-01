@@ -9,15 +9,11 @@ import {
 import { CreateMessageDto } from './dtos/create-message.dto';
 import { MessagesService } from './messages.service';
 
+// Controller는 다른 클래스의 dependency로 작용하지 않기에
+// Injectable 데코레이터가 필요하지 않다.
 @Controller('messages')
 export class MessagesController {
-  messagesService: MessagesService;
-
-  constructor() {
-    this.messagesService = new MessagesService();
-  }
-  // constructor(private messagesService = new MessagesService()) {}
-  // 이후 dependency injection으로 교체할 것
+  constructor(private messagesService: MessagesService) {}
 
   @Get()
   listMessages() {
