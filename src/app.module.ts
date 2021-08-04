@@ -13,6 +13,8 @@ import { UsersModule } from './users/users.module';
       database: 'db.sqlite',
       entities: [User, Report],
       synchronize: true,
+      // 개발 환경에서만 true로 설정하는 속성이다.
+      // typeORM이 entity들을 보고 자동으로 database의 구조를 설정(migration)하도록 허용하는 속성인 것
     }),
     ReportsModule,
     UsersModule,
