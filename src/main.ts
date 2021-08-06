@@ -7,6 +7,8 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
+      // Dto에 정의되어 있지 않은 property는 없애버린다는 옵션
+      // 임의로 admin 권한을 집어넣는다던가 하는 것을 방지하는 보안 상의 옵션
     }),
   );
   await app.listen(3000);
