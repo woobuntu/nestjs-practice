@@ -41,4 +41,14 @@ export class UsersService {
 
     return this.repository.save(updatedUser);
   }
+
+  async remove(id: number) {
+    const userToBeDeleted = await this.repository.findOne(id);
+
+    if (!userToBeDeleted)
+      throw new Error(`id : ${id}인 user가 존재하지 않습니다.`);
+
+    return this.repository.remove(userToBeDeleted);
+    // remove의 인자로는 entity가, delete의 인자로는 criteria가 전달된다.
+  }
 }
