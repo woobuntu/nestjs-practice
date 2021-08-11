@@ -26,4 +26,19 @@ export class UsersService {
     return this.repository.find({ email });
     // 조건에 맞는 data가 없으면 빈 배열 반환
   }
+
+  // Partial<객체>는 속성이 아예 없거나, 해당 객체의 속성으로만 구성된 객체 타입이다.
+  async update(id: number, attrs: Partial<User>) {
+    const originalUser = await this.repository.findOne(id);
+
+    if (!originalUser)
+      throw new Error(`id : ${id}인 user가 존재하지 않습니다.`);
+
+    const updatedUser = {
+      ...originalUser,
+      ...attrs,
+    };
+
+    return this.repository.save(updatedUser);
+  }
 }
