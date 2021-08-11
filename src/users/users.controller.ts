@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, FindOneDto, FindUsersByEmailDto } from './dtos';
 
@@ -23,5 +31,11 @@ export class UsersController {
   findUsersByEmail(@Query() findUsersByEmailDto: FindUsersByEmailDto) {
     const { email } = findUsersByEmailDto;
     return this.usersService.find(email);
+  }
+
+  @Delete('/:id')
+  removeUserById(@Param() findOneDto: FindOneDto) {
+    const { id } = findOneDto;
+    return this.usersService.remove(id);
   }
 }

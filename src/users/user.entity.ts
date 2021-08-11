@@ -30,6 +30,8 @@ export class User {
 
   @AfterRemove()
   logRemove() {
-    console.log(`Removed User with id ${this.id}`);
+    console.log(this);
+    console.log(`Removed User`);
+    // 지워진 후라 id 참조가 안 되는 것 같다.
   }
 }
