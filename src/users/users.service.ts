@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -18,8 +18,11 @@ export class UsersService {
     // 만들어진 userEntity의 인스턴스를 db에 'save'하는 것
   }
 
-  findOne(id: number) {
-    return this.repository.findOne(id);
+  async findOne(id: number) {
+    const user = await this.repository.findOne(id);
+    if (!user)
+      throw new NotFoundException(`id ${id}인 user를 찾지 못했습니다.`);
+    return user;
   }
 
   find(email: string) {
@@ -31,9 +34,6 @@ export class UsersService {
   async update(id: number, attrs: Partial<User>) {
     const originalUser = await this.repository.findOne(id);
 
-    if (!originalUser)
-      throw new Error(`id : ${id}인 user가 존재하지 않습니다.`);
-
     const updatedUser = {
       ...originalUser,
       ...attrs,
@@ -44,9 +44,6 @@ export class UsersService {
 
   async remove(id: number) {
     const userToBeDeleted = await this.repository.findOne(id);
-
-    if (!userToBeDeleted)
-      throw new Error(`id : ${id}인 user가 존재하지 않습니다.`);
 
     return this.repository.remove(userToBeDeleted);
     // remove의 인자로는 entity가, delete의 인자로는 criteria가 전달된다.
