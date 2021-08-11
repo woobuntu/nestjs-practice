@@ -17,4 +17,13 @@ export class UsersService {
     return this.repository.save(user);
     // 만들어진 userEntity의 인스턴스를 db에 'save'하는 것
   }
+
+  findOne(id: number) {
+    return this.repository.findOne(id);
+  }
+
+  find(email: string) {
+    return this.repository.find({ email });
+    // 조건에 맞는 data가 없으면 빈 배열 반환
+  }
 }
