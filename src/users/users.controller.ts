@@ -1,6 +1,5 @@
 import {
   Body,
-  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -16,8 +15,12 @@ import {
   FindOneDto,
   FindUsersByEmailDto,
   UpdateUserDto,
+  UserDto,
 } from './dtos';
+import { Serialize } from '../interceptors/serialize.interceptors';
 
+// 이렇게 controller별로 설정할 수도 있고, controller 내부의 route handler별로 설정할 수도 있다.
+@Serialize(UserDto)
 @Controller('auth')
 export class UsersController {
   constructor(private usersService: UsersService) {}
@@ -28,7 +31,6 @@ export class UsersController {
     this.usersService.create(email, password);
   }
 
-  @UseInterceptors(ClassSerializerInterceptor)
   @Get('/:id')
   findUserById(@Param() { id }: FindOneDto) {
     return this.usersService.findOne(id);
