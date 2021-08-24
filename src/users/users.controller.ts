@@ -7,7 +7,6 @@ import {
   Patch,
   Post,
   Query,
-  UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
@@ -18,17 +17,21 @@ import {
   UserDto,
 } from './dtos';
 import { Serialize } from '../interceptors/serialize.interceptors';
+import { AuthService } from './auth.service';
 
 // 이렇게 controller별로 설정할 수도 있고, controller 내부의 route handler별로 설정할 수도 있다.
 @Serialize(UserDto)
 @Controller('auth')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private authService: AuthService,
+  ) {}
 
   @Post('/signup')
   createUser(@Body() createUserDto: CreateUserDto) {
     const { email, password } = createUserDto;
-    this.usersService.create(email, password);
+    return this.authService.signup(email, password);
   }
 
   @Get('/:id')
