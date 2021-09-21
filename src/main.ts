@@ -1,9 +1,16 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module'; // root 모듈
+// cookie-session 라이브러리의 내부 설정 중 tsconfig의 설정과 호환이 안 되는 문제가 있어 require문을 사용
+import cookieSession = require('cookie-session');
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.use(
+    cookieSession({
+      keys: ['foseja'], //쿠키에 담길  정보를 암호화할 때 사용된다.
+    }),
+  );
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
