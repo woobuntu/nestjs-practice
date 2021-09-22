@@ -7,6 +7,8 @@ import {
   Patch,
   Post,
   Query,
+  Session,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import {
@@ -18,8 +20,14 @@ import {
 } from './dtos';
 import { Serialize } from '../interceptors/serialize.interceptors';
 import { AuthService } from './auth.service';
+import { CurrentUser } from './decorators/current-user.decorator';
+import { User } from './user.entity';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 // 이렇게 controller별로 설정할 수도 있고, controller 내부의 route handler별로 설정할 수도 있다.
+
+// @UseInterceptors(CurrentUserInterceptor)
+// 만약 app 전역에 적용해야 되는 interceptor라면 APP_INTERCEPTOR를 적용하여 코드의 불필요한 반복을 줄일 수 있다.
 @Serialize(UserDto)
 @Controller('auth')
 export class UsersController {
@@ -28,17 +36,37 @@ export class UsersController {
     private authService: AuthService,
   ) {}
 
+  @Get('/whoami')
+  @UseGuards(AuthGuard)
+  whoAmI(@CurrentUser() user: User) {
+    return user;
+  }
+
   @Post('/signup')
-  createUser(@Body() createUserDto: CreateUserDto) {
+  async createUser(
+    @Body() createUserDto: CreateUserDto,
+    @Session() session: any,
+  ) {
     const { email, password } = createUserDto;
-    return this.authService.signup(email, password);
+    const user = await this.authService.signup(email, password);
+    session.userId = user.id;
+    return user;
   }
 
   @Post('/signin')
-  signin(@Body() signInUserDto: CreateUserDto) {
+  async signin(@Body() signInUserDto: CreateUserDto, @Session() session: any) {
     const { email, password } = signInUserDto;
-    return this.authService.signin(email, password);
+    const user = await this.authService.signin(email, password);
+    session.userId = user.id;
+    return user;
   }
+
+  // 굳이 Post여야할 이유가...?
+  @Post('/signout')
+  signOut(@Session() session: any) {
+    session.userId = null;
+  }
+
   @Get('/:id')
   findUserById(@Param() { id }: FindOneDto) {
     return this.usersService.findOne(id);
